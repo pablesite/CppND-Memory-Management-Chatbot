@@ -117,11 +117,11 @@ ChatBotPanelDialog::ChatBotPanelDialog(wxWindow *parent, wxWindowID id)
     //// STUDENT CODE
     ////
 
-    std::cout << "ChatBotPanelDialog: Allocate _chatLogic in " << _chatLogic << "\n";
+    
     // create chat logic instance
+    std::cout << "ChatBotPanelDialog: Allocate _chatLogic in " << _chatLogic.get() << "\n";
     //_chatLogic = new ChatLogic(); 
-
-
+    
     // pass pointer to chatbot dialog so answers can be displayed in GUI
     _chatLogic->SetPanelDialogHandle(this);
 
@@ -137,7 +137,7 @@ ChatBotPanelDialog::~ChatBotPanelDialog()
     //// STUDENT CODE
     ////
 
-    std::cout << "ChatBotPanelDialog: Deallocate _chatLogic from " << _chatLogic << "\n";
+    std::cout << "ChatBotPanelDialog: Deallocate _chatLogic from " << _chatLogic.get() << "\n";
     //delete _chatLogic;
 
     ////

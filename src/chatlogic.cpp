@@ -16,7 +16,7 @@ ChatLogic::ChatLogic()
 {
     //// STUDENT CODE
     ////
-    std::cout << "Chatlogic: Constructor " << this << "\n";
+    //std::cout << "Chatlogic: Constructor " << this << "\n";
     // create instance of chatbot
     _chatBot = new ChatBot("../images/chatbot.png");
 
@@ -31,7 +31,7 @@ ChatLogic::~ChatLogic()
 {
     //// STUDENT CODE
     ////
-    std::cout << "Chatlogic: Destructor " << this << "\n";
+    //std::cout << "Chatlogic: Destructor " << this << "\n";
     // delete chatbot instance
     delete _chatBot;
 
@@ -235,7 +235,6 @@ void ChatLogic::SetChatbotHandle(ChatBot *chatbot)
 
 void ChatLogic::SendMessageToChatbot(std::string message)
 {
-    std::cout << "SendMessageToChatbot\n\n";
     _chatBot->ReceiveMessageFromUser(message);
 }
 
@@ -246,6 +245,5 @@ void ChatLogic::SendMessageToUser(std::string message)
 
 wxBitmap *ChatLogic::GetImageFromChatbot()
 {
-    std::cout << "GetImageFromChatbot\n\n";
     return _chatBot->GetImageHandle();
 }

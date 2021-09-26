@@ -14,17 +14,14 @@ private:
     wxBoxSizer *_dialogSizer;
     wxBitmap _image;
 
-    //// STUDENT CODE
+    //// STUDENT CODE //DONE
     ////
 
     //ChatLogic *_chatLogic;
-
-    //std::unique_ptr<ChatLogic> _chatLogic = std::make_unique<ChatLogic>();
-    //std::shared_ptr<ChatLogic> _chatLogic;
-    std::shared_ptr<ChatLogic> _chatLogic = std::make_shared<ChatLogic>();
+    std::unique_ptr<ChatLogic> _chatLogic = std::make_unique<ChatLogic>();
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF STUDENT CODE //DONE
 
 public:
     // constructor / destructor
@@ -33,10 +30,7 @@ public:
 
     // getter / setter
     //ChatLogic *GetChatLogicHandle() { return _chatLogic; }
-    std::shared_ptr<ChatLogic> GetChatLogicHandle() { 
-        std::cout << "GetChatLogicHandle: Used " << _chatLogic.use_count() << "\n";
-        return _chatLogic; 
-        }
+    ChatLogic  *GetChatLogicHandle() { return _chatLogic.get(); }
 
     // events
     void paintEvent(wxPaintEvent &evt);
