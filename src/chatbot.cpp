@@ -43,24 +43,108 @@ ChatBot::~ChatBot() {
 //// STUDENT CODE
 ////
 // Deep copying policy
-ChatBot::ChatBot(ChatBot &source) {
+ChatBot::ChatBot(const ChatBot &source) {
+  std::cout << "ChatBot Copy Constructor. Instance " << &source
+            << " to instance " << this << std::endl;
+
   _chatLogic = source._chatLogic;
   _rootNode = source._rootNode;
-  _filename = source._filename;
+  _currentNode = source._currentNode;
 
+  // If chatbot has been created with constructor without arguments, it hasn't
+  // filename and image
   if (!source._filename.empty()) {
+    _filename = source._filename;
+    _image = new wxBitmap(source._filename, wxBITMAP_TYPE_PNG);
+    *_image = *source._image;
+  }
+}
+
+// Deep copying policy
+ChatBot &ChatBot::operator=(const ChatBot &source) {
+  std::cout << "ChatBot Copy Assignment Operator. Instance " << &source
+            << " to instance " << this << std::endl;
+
+  // return the same instance if source is the same.
+  if (this == &source)
+    return *this;
+
+  // deallocate previous image from the Heap
+  delete _image;
+
+  // deep copy of the instance
+  _chatLogic = source._chatLogic;
+  _rootNode = source._rootNode;
+  _currentNode = source._currentNode;
+  // If chatbot has been created with constructor without arguments, it hasn't
+  // filename and image
+  if (!source._filename.empty()) {
+    _filename = source._filename;
     _image = new wxBitmap(source._filename, wxBITMAP_TYPE_PNG);
     *_image = *source._image;
   }
 
-  std::cout << "ChatBot Copy Constructor " << &source << " to instance " << this
-            << std::endl;
+  return *this;
 }
 
-ChatBot &ChatBot::operator=(ChatBot &source) { // TO CHANGE TO DEEP COPYING
-  std::cout << "ChatBot Copy Assignment Operator";
-  _image = source._image;
+// Move Constructor using move semantics
+ChatBot::ChatBot(ChatBot &&source) {
+  std::cout << "ChatBot Move Constructor. Instance " << &source
+            << " to instance " << this << std::endl;
+
+  // Move instance from source to this
+  _chatLogic = source._chatLogic;
+  _rootNode = source._rootNode;
+  _currentNode = source._currentNode;
+
+  // If chatbot has been created with constructor without arguments, it hasn't
+  // filename and image
+  if (!source._filename.empty()) {
+    _filename = source._filename;
+    _image = source._image;
+  }
+
+  // Delete source instance
+  source._chatLogic = nullptr;
+  source._rootNode = nullptr;
+  source._currentNode = nullptr;
+
+  source._filename = "";
   source._image = nullptr;
+}
+
+// Move assignment operator using move semantics.
+ChatBot &ChatBot::operator=(ChatBot &&source) {
+  std::cout << "ChatBot Move Assignment Operator. Instance " << &source
+            << " to instance " << this << std::endl;
+
+  // return the same instance if source is the same.
+  if (this == &source)
+    return *this;
+
+  // deallocate previous image from the Heap
+  delete _image;
+
+  // Move instance from source to this
+  _chatLogic = source._chatLogic;
+  _rootNode = source._rootNode;
+  _currentNode = source._currentNode;
+
+  // If chatbot has been created with constructor without arguments, it hasn't
+  // filename and image
+  if (!source._filename.empty()) {
+    _filename = source._filename;
+    _image = source._image;
+  }
+
+  // Delete source instance
+  source._chatLogic = nullptr;
+  source._rootNode = nullptr;
+  source._currentNode = nullptr;
+
+  source._filename = "";
+  source._image = nullptr;
+
   return *this;
 }
 
