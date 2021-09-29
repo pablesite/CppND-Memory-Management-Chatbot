@@ -17,9 +17,8 @@ private:
     //// STUDENT CODE //DONE
     ////
 
-    //ChatLogic *_chatLogic;
-    std::unique_ptr<ChatLogic> _chatLogic = std::make_unique<ChatLogic>();
-
+    /*** TASK 1. Unique pointer***/
+    std::unique_ptr<ChatLogic> _chatLogic;
     ////
     //// EOF STUDENT CODE //DONE
 
@@ -29,7 +28,9 @@ public:
     ~ChatBotPanelDialog();
 
     // getter / setter
+
     //ChatLogic *GetChatLogicHandle() { return _chatLogic; }
+    /*** TASK 1. ***/
     ChatLogic  *GetChatLogicHandle() { return _chatLogic.get(); }
 
     // events

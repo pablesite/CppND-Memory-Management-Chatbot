@@ -5,7 +5,6 @@
 #include <iterator>
 #include <tuple>
 #include <algorithm>
-#include <memory>
 
 #include "graphedge.h"
 #include "graphnode.h"
@@ -32,10 +31,10 @@ ChatLogic::~ChatLogic()
 {
     //// STUDENT CODE
     ////
-    //std::cout << "Chatlogic: Destructor " << this << "\n";
     // delete chatbot instance
     delete _chatBot;
 
+    /*** TASK 3. It is not necessary deleted because now they are smart pointers***/
     // delete all nodes (I think it should be not necessary deleted because now they are smart pointers)
     // for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
     // {
@@ -128,12 +127,13 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         ////
 
                         // check if node with this ID exists already
+                        /*** TASK 3 ***/
                         auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](const std::unique_ptr<GraphNode> &node) { return node->GetID() == id; });
 
                         // create new element if ID does not yet exist
                         if (newNode == _nodes.end())
                         {
-                            //_nodes.emplace_back(new GraphNode(id));
+                            /*** TASK 3 ***/
                             _nodes.emplace_back(std::make_unique<GraphNode>(id));
                             newNode = _nodes.end() - 1; // get iterator to last element
 
@@ -158,6 +158,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         if (parentToken != tokens.end() && childToken != tokens.end())
                         {
                             // get iterator on incoming and outgoing node via ID search
+                            /*** TASK 3 ***/
                             auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(parentToken->second); });
                             auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 

@@ -30,6 +30,7 @@ public:
 
     //// STUDENT CODE
     ////
+    /*** TASK 2 - Rule of Five ***/
     ChatBot(const ChatBot &source);
     ChatBot &operator=(const ChatBot &source);
     ChatBot(ChatBot &&source);

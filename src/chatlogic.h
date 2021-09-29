@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <memory>
 
 #include "chatgui.h"
 
@@ -20,7 +19,9 @@ private:
     ////
 
     // data handles (owned)
+    /*** TASK 3 ***/
     std::vector<std::unique_ptr<GraphNode>> _nodes;
+
     std::vector<GraphEdge *> _edges;
 
     ////

@@ -9,7 +9,8 @@ GraphNode::~GraphNode() {
   //// STUDENT CODE
   ////
 
-  //delete _chatBot; //comment to solve task0
+  /*** TASK 0. _chatBot is deallocated in chatlogic ***/
+  //delete _chatBot; 
 
   ////
   //// EOF STUDENT CODE

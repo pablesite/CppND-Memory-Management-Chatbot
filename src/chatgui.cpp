@@ -119,8 +119,9 @@ ChatBotPanelDialog::ChatBotPanelDialog(wxWindow *parent, wxWindowID id)
 
     
     // create chat logic instance
+    /*** TASK 1. create new unique smart pointer***/
+    _chatLogic = std::make_unique<ChatLogic>();
     std::cout << "ChatBotPanelDialog: Allocate _chatLogic in " << _chatLogic.get() << "\n";
-    //_chatLogic = new ChatLogic(); 
     
     // pass pointer to chatbot dialog so answers can be displayed in GUI
     _chatLogic->SetPanelDialogHandle(this);
@@ -137,6 +138,7 @@ ChatBotPanelDialog::~ChatBotPanelDialog()
     //// STUDENT CODE
     ////
 
+    /*** TASK 1. _chatLogic is SmartPointer, so it is not necessary deallocate manually.***/
     std::cout << "ChatBotPanelDialog: Deallocate _chatLogic from " << _chatLogic.get() << "\n";
     //delete _chatLogic;
 
