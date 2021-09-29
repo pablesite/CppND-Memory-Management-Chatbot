@@ -22,8 +22,9 @@ private:
     /*** TASK 3 ***/
     std::vector<std::unique_ptr<GraphNode>> _nodes;
 
-    std::vector<GraphEdge *> _edges;
-
+    /*** TASK 4 ***/
+    //std::vector<GraphEdge *> _edges;
+    //std::vector<std::unique_ptr<GraphEdge>> _edges;
     ////
     //// EOF STUDENT CODE
 

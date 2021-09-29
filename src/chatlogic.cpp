@@ -35,17 +35,18 @@ ChatLogic::~ChatLogic()
     delete _chatBot;
 
     /*** TASK 3. It is not necessary deleted because now they are smart pointers***/
-    // delete all nodes (I think it should be not necessary deleted because now they are smart pointers)
+    // delete all nodes
     // for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
     // {
     //     delete *it;
     // }
 
+    /*** TASK 4. It is not necessary deleted because now they are smart pointers***/
     // delete all edges
-    for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
-    {
-        delete *it;
-    }
+    // for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
+    // {
+    //     delete *it;
+    // }
 
     ////
     //// EOF STUDENT CODE
@@ -162,18 +163,22 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(parentToken->second); });
                             auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 
+                            /*** TASK 4 ***/
                             // create new edge
-                            GraphEdge *edge = new GraphEdge(id);
-                            edge->SetChildNode(childNode->get()); //THink about this
-                            edge->SetParentNode(parentNode->get());
-                            _edges.push_back(edge);
+                            //GraphEdge *edge = new GraphEdge(id);
+                            std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
 
+                            edge->SetChildNode(childNode->get()); 
+                            edge->SetParentNode(parentNode->get());
+                            /*** TASK 4 - Using move semantics to transfer ownership to _edges***/
+                            //_edges.push_back(std::move(edge)); //CHECK THIS OUT. It shouldn't be necessary? There is no vector of edges here
                             // find all keywords for current node
                             AddAllTokensToElement("KEYWORD", tokens, *edge);
 
+                            /*** TASK 4 ***/
                             // store reference in child node and parent node
-                            (*childNode)->AddEdgeToParentNode(edge);
-                            (*parentNode)->AddEdgeToChildNode(edge);
+                            (*childNode)->AddEdgeToParentNode(edge.get());
+                            (*parentNode)->AddEdgeToChildNode(std::move(edge)); //CHECK THIS OUT - Task 4 move the edge for ownership to childNodes
                         }
 
                         ////
@@ -209,6 +214,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
             if (rootNode == nullptr)
             {
+                /*** TASK 3. Get rootNode from unique pointer ***/
                 rootNode = it->get(); // assign current node to root
             }
             else
