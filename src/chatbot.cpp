@@ -42,7 +42,7 @@ ChatBot::~ChatBot() {
 
 //// STUDENT CODE
 ////
-// Deep copying policy
+/*** TASK 2. Copy Constructor (Deep copying policy) ***/
 ChatBot::ChatBot(const ChatBot &source) {
   std::cout << "ChatBot Copy Constructor. Instance " << &source
             << " to instance " << this << std::endl;
@@ -53,14 +53,14 @@ ChatBot::ChatBot(const ChatBot &source) {
 
   // If chatbot has been created with constructor without arguments, it hasn't
   // filename and image
-  if (!source._filename.empty()) {
+  if (source._image != NULL) {
     _filename = source._filename;
     _image = new wxBitmap(source._filename, wxBITMAP_TYPE_PNG);
     *_image = *source._image;
   }
 }
 
-// Deep copying policy
+/*** TASK 2. Copy Assignment Operator (Deep copying policy) ***/
 ChatBot &ChatBot::operator=(const ChatBot &source) {
   std::cout << "ChatBot Copy Assignment Operator. Instance " << &source
             << " to instance " << this << std::endl;
@@ -78,7 +78,7 @@ ChatBot &ChatBot::operator=(const ChatBot &source) {
   _currentNode = source._currentNode;
   // If chatbot has been created with constructor without arguments, it hasn't
   // filename and image
-  if (!source._filename.empty()) {
+  if (source._image != NULL) {
     _filename = source._filename;
     _image = new wxBitmap(source._filename, wxBITMAP_TYPE_PNG);
     *_image = *source._image;
@@ -87,7 +87,7 @@ ChatBot &ChatBot::operator=(const ChatBot &source) {
   return *this;
 }
 
-// Move Constructor using move semantics
+/*** TASK 2. Move Constructor using move semantics ***/
 ChatBot::ChatBot(ChatBot &&source) {
   std::cout << "ChatBot Move Constructor. Instance " << &source
             << " to instance " << this << std::endl;
@@ -99,7 +99,7 @@ ChatBot::ChatBot(ChatBot &&source) {
 
   // If chatbot has been created with constructor without arguments, it hasn't
   // filename and image
-  if (!source._filename.empty()) {
+  if (source._image != NULL) {
     _filename = source._filename;
     _image = source._image;
   }
@@ -110,10 +110,10 @@ ChatBot::ChatBot(ChatBot &&source) {
   source._currentNode = nullptr;
 
   source._filename = "";
-  source._image = nullptr;
+  source._image = NULL;
 }
 
-// Move assignment operator using move semantics.
+/*** TASK 2. Move assignment operator using move semantics ***/
 ChatBot &ChatBot::operator=(ChatBot &&source) {
   std::cout << "ChatBot Move Assignment Operator. Instance " << &source
             << " to instance " << this << std::endl;
@@ -132,7 +132,7 @@ ChatBot &ChatBot::operator=(ChatBot &&source) {
 
   // If chatbot has been created with constructor without arguments, it hasn't
   // filename and image
-  if (!source._filename.empty()) {
+  if (source._image != NULL) {
     _filename = source._filename;
     _image = source._image;
   }
@@ -143,7 +143,7 @@ ChatBot &ChatBot::operator=(ChatBot &&source) {
   source._currentNode = nullptr;
 
   source._filename = "";
-  source._image = nullptr;
+  source._image = NULL;
 
   return *this;
 }
