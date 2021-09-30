@@ -27,7 +27,6 @@ ChatBot::ChatBot(std::string filename) {
   // load image into heap memory
   _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
   _filename = filename;
-  
 }
 
 ChatBot::~ChatBot() {
@@ -49,6 +48,7 @@ ChatBot::ChatBot(const ChatBot &source) {
             << " to instance " << this << std::endl;
 
   _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   _rootNode = source._rootNode;
   _currentNode = source._currentNode;
 
@@ -75,6 +75,7 @@ ChatBot &ChatBot::operator=(const ChatBot &source) {
 
   // deep copy of the instance
   _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   _rootNode = source._rootNode;
   _currentNode = source._currentNode;
   // If chatbot has been created with constructor without arguments, it hasn't
@@ -91,10 +92,11 @@ ChatBot &ChatBot::operator=(const ChatBot &source) {
 /*** TASK 2. Move Constructor using move semantics ***/
 ChatBot::ChatBot(ChatBot &&source) {
   std::cout << "ChatBot Move Constructor. Instance " << &source
-            << " to instance " << this << std::endl;
+            << " to instance " << this << "\n";
 
   // Move instance from source to this
   _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this); //added para que no se rompa
   _rootNode = source._rootNode;
   _currentNode = source._currentNode;
 
@@ -112,6 +114,7 @@ ChatBot::ChatBot(ChatBot &&source) {
 
   source._filename = "";
   source._image = NULL;
+
 }
 
 /*** TASK 2. Move assignment operator using move semantics ***/
@@ -128,6 +131,7 @@ ChatBot &ChatBot::operator=(ChatBot &&source) {
 
   // Move instance from source to this
   _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   _rootNode = source._rootNode;
   _currentNode = source._currentNode;
 
