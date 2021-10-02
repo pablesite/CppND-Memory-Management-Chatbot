@@ -45,8 +45,7 @@ ChatLogic::~ChatLogic() {
   //     delete *it;
   // }
 
-  /*** TASK 4. It is not necessary deleted because now they are smart
-   * pointers***/
+  /*** TASK 4. It is not necessary deleted because doesn't exist ***/
   // delete all edges
   // for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
   // {
@@ -136,7 +135,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
             ////
 
             // check if node with this ID exists already
-            /*** TASK 3 ***/
+            /*** TASK 3 Change the element to search to unique_ptr (like _nodes
+             * vector) ***/
             auto newNode =
                 std::find_if(_nodes.begin(), _nodes.end(),
                              [&id](const std::unique_ptr<GraphNode> &node) {
@@ -145,7 +145,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
 
             // create new element if ID does not yet exist
             if (newNode == _nodes.end()) {
-              /*** TASK 3 ***/
+              /*** TASK 3 Change to creation to unique pointer ***/
               _nodes.emplace_back(std::make_unique<GraphNode>(id));
               newNode = _nodes.end() - 1; // get iterator to last element
 
@@ -176,7 +176,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
 
             if (parentToken != tokens.end() && childToken != tokens.end()) {
               // get iterator on incoming and outgoing node via ID search
-              /*** TASK 3 ***/
+              /*** TASK 3 Change the element to search to unique_ptr (like
+               * _nodes vector) ***/
               auto parentNode = std::find_if(
                   _nodes.begin(), _nodes.end(),
                   [&parentToken](const std::unique_ptr<GraphNode> &node) {
@@ -188,27 +189,23 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
                     return node->GetID() == std::stoi(childToken->second);
                   });
 
-              /*** TASK 4 ***/
+              /*** TASK 4 Create a unique pointer of GraphEdge to be seted and
+               * lastly transfered his ownership to GraphNode instance
+               * (_childNodes vector) ***/
               // create new edge
-              // GraphEdge *edge = new GraphEdge(id);
               std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
 
               edge->SetChildNode(childNode->get());
               edge->SetParentNode(parentNode->get());
-              /*** TASK 4 - Using move semantics to transfer ownership to
-               * _edges***/
-              //_edges.push_back(std::move(edge)); //CHECK THIS OUT. It
-              // shouldn't be necessary? There is no vector of edges here
-              // find all keywords for current node
+              /*** TASK 4 - _edges is not necessary in chatlogic ***/
               AddAllTokensToElement("KEYWORD", tokens, *edge);
 
-              /*** TASK 4 ***/
+              /*** TASK 4 Use get() property from unique pointer to get address
+               * from edge and use move semantics to transfer ownership to
+               * _childEdges in GraphNode ***/
               // store reference in child node and parent node
               (*childNode)->AddEdgeToParentNode(edge.get());
-              (*parentNode)
-                  ->AddEdgeToChildNode(
-                      std::move(edge)); // CHECK THIS OUT - Task 4 move the edge
-                                        // for ownership to childNodes
+              (*parentNode)->AddEdgeToChildNode(std::move(edge));
             }
 
             ////
@@ -238,7 +235,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
     if ((*it)->GetNumberOfParents() == 0) {
 
       if (rootNode == nullptr) {
-        /*** TASK 3. Get rootNode from unique pointer ***/
+        /*** TASK 3. Get memory address of rootNode using property get() from
+         * smart pointers ***/
         rootNode = it->get(); // assign current node to root
       } else {
         std::cout << "ERROR : Multiple root nodes detected" << std::endl;
@@ -246,8 +244,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
     }
   }
 
-  /*** Task 5: Local instance of ChatBot. Also add this instance to chatlogic so that
-   * chatbot answers can be passed on to the GUI ***/
+  /*** Task 5: Local instance of ChatBot. Also add this instance to chatlogic so
+   * that chatbot answers can be passed on to the GUI ***/
   ChatBot chatBot = ChatBot("../images/chatbot.png");
   chatBot.SetChatLogicHandle(this);
 

@@ -17,8 +17,8 @@ private:
 
   // data handles (owned)
   /*** TASK 4- Unique pointer to manage the ownership of _childEdges ***/
-  // std::vector<GraphEdge *> _childEdges;  // edges to subsequent nodes
-  std::vector<std::unique_ptr<GraphEdge>> _childEdges;
+  std::vector<std::unique_ptr<GraphEdge>>
+      _childEdges; // edges to subsequent nodes
 
   // data handles (not owned)
   std::vector<GraphEdge *> _parentEdges; // edges to preceding nodes
@@ -47,7 +47,8 @@ public:
   // proprietary functions
   void AddToken(std::string token); // add answers to list
   void AddEdgeToParentNode(GraphEdge *edge);
-  /*** TASK 4 ***/
+  /*** TASK 4 Change argument to unique pointer because the ownership of child
+   * edges should be into GraphNode ***/
   void AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge);
 
   //// STUDENT CODE

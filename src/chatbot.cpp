@@ -86,13 +86,14 @@ ChatBot &ChatBot::operator=(const ChatBot &source) {
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
   _chatLogic->SetChatbotHandle(this); // transfer ChatBot handle to this node.
-  
+
   return *this;
 }
 
 /*** TASK 2. Move Constructor using move semantics ***/
 ChatBot::ChatBot(ChatBot &&source) {
-  std::cout << "ChatBot Move Constructor" << "\n";
+  std::cout << "ChatBot Move Constructor"
+            << "\n";
 
   // if chatbot has been created with constructor without arguments, it hasn't
   // filename and image
@@ -111,7 +112,6 @@ ChatBot::ChatBot(ChatBot &&source) {
   source._currentNode = nullptr;
   source._rootNode = nullptr;
   source._chatLogic = nullptr;
-  
 }
 
 /*** TASK 2. Move Assignment Operator using move semantics ***/
