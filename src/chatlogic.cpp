@@ -1,269 +1,279 @@
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
-#include <iterator>
-#include <tuple>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <sstream>
+#include <tuple>
+#include <vector>
 
-#include "graphedge.h"
-#include "graphnode.h"
 #include "chatbot.h"
 #include "chatlogic.h"
+#include "graphedge.h"
+#include "graphnode.h"
 
+ChatLogic::ChatLogic() {
+  //// STUDENT CODE
+  ////
 
-ChatLogic::ChatLogic()
-{
-    //// STUDENT CODE
-    ////
-    //std::cout << "Chatlogic: Constructor " << this << "\n";
-    /*** TASK 5 ***/
-    // create instance of chatbot
-    //_chatBot = new ChatBot("../images/chatbot.png");
+  /*** TASK 5  ChatLogic has no ownership relation to the ChatBot instance and
+   * thus is no longer responsible for memory allocation and deallocation.***/
+  // create instance of chatbot
+  //_chatBot = new ChatBot("../images/chatbot.png");
 
-    // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
-    //_chatBot->SetChatLogicHandle(this);
+  // add pointer to chatlogic so that chatbot answers can be passed on to the
+  // GUI
+  //_chatBot->SetChatLogicHandle(this);
 
-    ////
-    //// EOF STUDENT CODE
+  ////
+  //// EOF STUDENT CODE
 }
 
-ChatLogic::~ChatLogic()
-{
-    //// STUDENT CODE
-    ////
-    /*** TASK 5 ***/
-    // delete chatbot instance
-    //delete _chatBot;
+ChatLogic::~ChatLogic() {
+  //// STUDENT CODE
+  ////
 
-    /*** TASK 3. It is not necessary deleted because now they are smart pointers***/
-    // delete all nodes
-    // for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
-    // {
-    //     delete *it;
-    // }
+  /*** TASK 5  ChatLogic has no ownership relation to the ChatBot instance and
+   * thus is no longer responsible for memory allocation and deallocation.***/
+  // delete chatbot instance
+  // delete _chatBot;
 
-    /*** TASK 4. It is not necessary deleted because now they are smart pointers***/
-    // delete all edges
-    // for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
-    // {
-    //     delete *it;
-    // }
+  /*** TASK 3. It is not necessary deleted because now they are smart
+   * pointers***/
+  // delete all nodes
+  // for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
+  // {
+  //     delete *it;
+  // }
 
-    ////
-    //// EOF STUDENT CODE
+  /*** TASK 4. It is not necessary deleted because now they are smart
+   * pointers***/
+  // delete all edges
+  // for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
+  // {
+  //     delete *it;
+  // }
+
+  ////
+  //// EOF STUDENT CODE
 }
 
 template <typename T>
-void ChatLogic::AddAllTokensToElement(std::string tokenID, tokenlist &tokens, T &element)
-{
-    // find all occurences for current node
-    auto token = tokens.begin();
-    while (true)
-    {
-        token = std::find_if(token, tokens.end(), [&tokenID](const std::pair<std::string, std::string> &pair) { return pair.first == tokenID;; });
-        if (token != tokens.end())
-        {
-            element.AddToken(token->second); // add new keyword to edge
-            token++;                         // increment iterator to next element
-        }
-        else
-        {
-            break; // quit infinite while-loop
-        }
+void ChatLogic::AddAllTokensToElement(std::string tokenID, tokenlist &tokens,
+                                      T &element) {
+  // find all occurences for current node
+  auto token = tokens.begin();
+  while (true) {
+    token = std::find_if(
+        token, tokens.end(),
+        [&tokenID](const std::pair<std::string, std::string> &pair) {
+          return pair.first == tokenID;
+          ;
+        });
+    if (token != tokens.end()) {
+      element.AddToken(token->second); // add new keyword to edge
+      token++;                         // increment iterator to next element
+    } else {
+      break; // quit infinite while-loop
     }
+  }
 }
 
-void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
-{
-    // load file with answer graph elements
-    std::ifstream file(filename);
+void ChatLogic::LoadAnswerGraphFromFile(std::string filename) {
+  // load file with answer graph elements
+  std::ifstream file(filename);
 
-    // check for file availability and process it line by line
-    if (file)
-    {
-        // loop over all lines in the file
-        std::string lineStr;
-        while (getline(file, lineStr))
-        {
-            // extract all tokens from current line
-            tokenlist tokens;
-            while (lineStr.size() > 0)
-            {
-                // extract next token
-                int posTokenFront = lineStr.find("<");
-                int posTokenBack = lineStr.find(">");
-                if (posTokenFront < 0 || posTokenBack < 0)
-                    break; // quit loop if no complete token has been found
-                std::string tokenStr = lineStr.substr(posTokenFront + 1, posTokenBack - 1);
+  // check for file availability and process it line by line
+  if (file) {
+    // loop over all lines in the file
+    std::string lineStr;
+    while (getline(file, lineStr)) {
+      // extract all tokens from current line
+      tokenlist tokens;
+      while (lineStr.size() > 0) {
+        // extract next token
+        int posTokenFront = lineStr.find("<");
+        int posTokenBack = lineStr.find(">");
+        if (posTokenFront < 0 || posTokenBack < 0)
+          break; // quit loop if no complete token has been found
+        std::string tokenStr =
+            lineStr.substr(posTokenFront + 1, posTokenBack - 1);
 
-                // extract token type and info
-                int posTokenInfo = tokenStr.find(":");
-                if (posTokenInfo != std::string::npos)
-                {
-                    std::string tokenType = tokenStr.substr(0, posTokenInfo);
-                    std::string tokenInfo = tokenStr.substr(posTokenInfo + 1, tokenStr.size() - 1);
+        // extract token type and info
+        int posTokenInfo = tokenStr.find(":");
+        if (posTokenInfo != std::string::npos) {
+          std::string tokenType = tokenStr.substr(0, posTokenInfo);
+          std::string tokenInfo =
+              tokenStr.substr(posTokenInfo + 1, tokenStr.size() - 1);
 
-                    // add token to vector
-                    tokens.push_back(std::make_pair(tokenType, tokenInfo));
-                }
-
-                // remove token from current line
-                lineStr = lineStr.substr(posTokenBack + 1, lineStr.size());
-            }
-
-            // process tokens for current line
-            auto type = std::find_if(tokens.begin(), tokens.end(), [](const std::pair<std::string, std::string> &pair) { return pair.first == "TYPE"; });
-            if (type != tokens.end())
-            {
-                // check for id
-                auto idToken = std::find_if(tokens.begin(), tokens.end(), [](const std::pair<std::string, std::string> &pair) { return pair.first == "ID"; });
-                if (idToken != tokens.end())
-                {
-                    // extract id from token
-                    int id = std::stoi(idToken->second);
-
-                    // node-based processing
-                    if (type->second == "NODE")
-                    {
-                        //// STUDENT CODE
-                        ////
-
-                        // check if node with this ID exists already
-                        /*** TASK 3 ***/
-                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](const std::unique_ptr<GraphNode> &node) { return node->GetID() == id; });
-
-                        // create new element if ID does not yet exist
-                        if (newNode == _nodes.end())
-                        {
-                            /*** TASK 3 ***/
-                            _nodes.emplace_back(std::make_unique<GraphNode>(id));
-                            newNode = _nodes.end() - 1; // get iterator to last element
-
-                            // add all answers to current node
-                            AddAllTokensToElement("ANSWER", tokens, **newNode);
-                        }
-
-                        ////
-                        //// EOF STUDENT CODE
-                    }
-
-                    // edge-based processing
-                    if (type->second == "EDGE")
-                    {
-                        //// STUDENT CODE
-                        ////
-
-                        // find tokens for incoming (parent) and outgoing (child) node
-                        auto parentToken = std::find_if(tokens.begin(), tokens.end(), [](const std::pair<std::string, std::string> &pair) { return pair.first == "PARENT"; });
-                        auto childToken = std::find_if(tokens.begin(), tokens.end(), [](const std::pair<std::string, std::string> &pair) { return pair.first == "CHILD"; });
-
-                        if (parentToken != tokens.end() && childToken != tokens.end())
-                        {
-                            // get iterator on incoming and outgoing node via ID search
-                            /*** TASK 3 ***/
-                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(parentToken->second); });
-                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
-
-                            /*** TASK 4 ***/
-                            // create new edge
-                            //GraphEdge *edge = new GraphEdge(id);
-                            std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
-
-                            edge->SetChildNode(childNode->get()); 
-                            edge->SetParentNode(parentNode->get());
-                            /*** TASK 4 - Using move semantics to transfer ownership to _edges***/
-                            //_edges.push_back(std::move(edge)); //CHECK THIS OUT. It shouldn't be necessary? There is no vector of edges here
-                            // find all keywords for current node
-                            AddAllTokensToElement("KEYWORD", tokens, *edge);
-
-                            /*** TASK 4 ***/
-                            // store reference in child node and parent node
-                            (*childNode)->AddEdgeToParentNode(edge.get());
-                            (*parentNode)->AddEdgeToChildNode(std::move(edge)); //CHECK THIS OUT - Task 4 move the edge for ownership to childNodes
-                        }
-
-                        ////
-                        //// EOF STUDENT CODE
-                    }
-                }
-                else
-                {
-                    std::cout << "Error: ID missing. Line is ignored!" << std::endl;
-                }
-            }
-        } // eof loop over all lines in the file
-
-        file.close();
-
-    } // eof check for file availability
-    else
-    {
-        std::cout << "File could not be opened!" << std::endl;
-        return;
-    }
-
-    //// STUDENT CODE
-    ////
-    
-
-    // identify root node
-    GraphNode *rootNode = nullptr;
-    for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
-    {
-        // search for nodes which have no incoming edges
-        if ((*it)->GetNumberOfParents() == 0)
-        {
-
-            if (rootNode == nullptr)
-            {
-                /*** TASK 3. Get rootNode from unique pointer ***/
-                rootNode = it->get(); // assign current node to root
-            }
-            else
-            {
-                std::cout << "ERROR : Multiple root nodes detected" << std::endl;
-            }
+          // add token to vector
+          tokens.push_back(std::make_pair(tokenType, tokenInfo));
         }
+
+        // remove token from current line
+        lineStr = lineStr.substr(posTokenBack + 1, lineStr.size());
+      }
+
+      // process tokens for current line
+      auto type =
+          std::find_if(tokens.begin(), tokens.end(),
+                       [](const std::pair<std::string, std::string> &pair) {
+                         return pair.first == "TYPE";
+                       });
+      if (type != tokens.end()) {
+        // check for id
+        auto idToken =
+            std::find_if(tokens.begin(), tokens.end(),
+                         [](const std::pair<std::string, std::string> &pair) {
+                           return pair.first == "ID";
+                         });
+        if (idToken != tokens.end()) {
+          // extract id from token
+          int id = std::stoi(idToken->second);
+
+          // node-based processing
+          if (type->second == "NODE") {
+            //// STUDENT CODE
+            ////
+
+            // check if node with this ID exists already
+            /*** TASK 3 ***/
+            auto newNode =
+                std::find_if(_nodes.begin(), _nodes.end(),
+                             [&id](const std::unique_ptr<GraphNode> &node) {
+                               return node->GetID() == id;
+                             });
+
+            // create new element if ID does not yet exist
+            if (newNode == _nodes.end()) {
+              /*** TASK 3 ***/
+              _nodes.emplace_back(std::make_unique<GraphNode>(id));
+              newNode = _nodes.end() - 1; // get iterator to last element
+
+              // add all answers to current node
+              AddAllTokensToElement("ANSWER", tokens, **newNode);
+            }
+
+            ////
+            //// EOF STUDENT CODE
+          }
+
+          // edge-based processing
+          if (type->second == "EDGE") {
+            //// STUDENT CODE
+            ////
+
+            // find tokens for incoming (parent) and outgoing (child) node
+            auto parentToken = std::find_if(
+                tokens.begin(), tokens.end(),
+                [](const std::pair<std::string, std::string> &pair) {
+                  return pair.first == "PARENT";
+                });
+            auto childToken = std::find_if(
+                tokens.begin(), tokens.end(),
+                [](const std::pair<std::string, std::string> &pair) {
+                  return pair.first == "CHILD";
+                });
+
+            if (parentToken != tokens.end() && childToken != tokens.end()) {
+              // get iterator on incoming and outgoing node via ID search
+              /*** TASK 3 ***/
+              auto parentNode = std::find_if(
+                  _nodes.begin(), _nodes.end(),
+                  [&parentToken](const std::unique_ptr<GraphNode> &node) {
+                    return node->GetID() == std::stoi(parentToken->second);
+                  });
+              auto childNode = std::find_if(
+                  _nodes.begin(), _nodes.end(),
+                  [&childToken](const std::unique_ptr<GraphNode> &node) {
+                    return node->GetID() == std::stoi(childToken->second);
+                  });
+
+              /*** TASK 4 ***/
+              // create new edge
+              // GraphEdge *edge = new GraphEdge(id);
+              std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
+
+              edge->SetChildNode(childNode->get());
+              edge->SetParentNode(parentNode->get());
+              /*** TASK 4 - Using move semantics to transfer ownership to
+               * _edges***/
+              //_edges.push_back(std::move(edge)); //CHECK THIS OUT. It
+              // shouldn't be necessary? There is no vector of edges here
+              // find all keywords for current node
+              AddAllTokensToElement("KEYWORD", tokens, *edge);
+
+              /*** TASK 4 ***/
+              // store reference in child node and parent node
+              (*childNode)->AddEdgeToParentNode(edge.get());
+              (*parentNode)
+                  ->AddEdgeToChildNode(
+                      std::move(edge)); // CHECK THIS OUT - Task 4 move the edge
+                                        // for ownership to childNodes
+            }
+
+            ////
+            //// EOF STUDENT CODE
+          }
+        } else {
+          std::cout << "Error: ID missing. Line is ignored!" << std::endl;
+        }
+      }
+    } // eof loop over all lines in the file
+
+    file.close();
+
+  } // eof check for file availability
+  else {
+    std::cout << "File could not be opened!" << std::endl;
+    return;
+  }
+
+  //// STUDENT CODE
+  ////
+
+  // identify root node
+  GraphNode *rootNode = nullptr;
+  for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it) {
+    // search for nodes which have no incoming edges
+    if ((*it)->GetNumberOfParents() == 0) {
+
+      if (rootNode == nullptr) {
+        /*** TASK 3. Get rootNode from unique pointer ***/
+        rootNode = it->get(); // assign current node to root
+      } else {
+        std::cout << "ERROR : Multiple root nodes detected" << std::endl;
+      }
     }
+  }
 
-/*** Task 5: Local instance of ChatBot ***/
-    //ChatBot * chatBot = new ChatBot("../images/chatbot.png");
-    
-    ChatBot chatBot = ChatBot("../images/chatbot.png"); 
-    chatBot.SetChatLogicHandle(this);
-    
-    // add chatbot to graph root node   
-    //_chatBot->SetRootNode(rootNode);
-    //rootNode->MoveChatbotHere(_chatBot);
-    chatBot.SetRootNode(rootNode);
-    rootNode->MoveChatbotHere(std::move(chatBot));
-    
-    ////
-    //// EOF STUDENT CODE
+  /*** Task 5: Local instance of ChatBot. Also add this instance to chatlogic so that
+   * chatbot answers can be passed on to the GUI ***/
+  ChatBot chatBot = ChatBot("../images/chatbot.png");
+  chatBot.SetChatLogicHandle(this);
+
+  // add chatbot to graph root node
+  chatBot.SetRootNode(rootNode);
+  // pass Rvalue in order to perform Move Constructor
+  rootNode->MoveChatbotHere(std::move(chatBot));
+
+  ////
+  //// EOF STUDENT CODE
 }
 
-void ChatLogic::SetPanelDialogHandle(ChatBotPanelDialog *panelDialog)
-{
-    _panelDialog = panelDialog;
+void ChatLogic::SetPanelDialogHandle(ChatBotPanelDialog *panelDialog) {
+  _panelDialog = panelDialog;
 }
 
-void ChatLogic::SetChatbotHandle(ChatBot *chatbot)
-{
-    _chatBot = chatbot;
+void ChatLogic::SetChatbotHandle(ChatBot *chatbot) { _chatBot = chatbot; }
+
+void ChatLogic::SendMessageToChatbot(std::string message) {
+  _chatBot->ReceiveMessageFromUser(message);
 }
 
-void ChatLogic::SendMessageToChatbot(std::string message)
-{
-    _chatBot->ReceiveMessageFromUser(message);
+void ChatLogic::SendMessageToUser(std::string message) {
+  _panelDialog->PrintChatbotResponse(message);
 }
 
-void ChatLogic::SendMessageToUser(std::string message)
-{
-    _panelDialog->PrintChatbotResponse(message);
-}
-
-wxBitmap *ChatLogic::GetImageFromChatbot()
-{
-    return _chatBot->GetImageHandle();
+wxBitmap *ChatLogic::GetImageFromChatbot() {
+  return _chatBot->GetImageHandle();
 }

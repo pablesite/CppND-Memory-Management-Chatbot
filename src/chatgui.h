@@ -17,8 +17,9 @@ private:
     //// STUDENT CODE //DONE
     ////
 
-    /*** TASK 1. Unique pointer***/
+    /*** TASK 1. Declare an unique pointer named _chatLogic***/
     std::unique_ptr<ChatLogic> _chatLogic;
+
     ////
     //// EOF STUDENT CODE //DONE
 
@@ -29,8 +30,8 @@ public:
 
     // getter / setter
 
-    //ChatLogic *GetChatLogicHandle() { return _chatLogic; }
-    /*** TASK 1. ***/
+    
+    /*** TASK 1. Use of get() property of Unique Pointer to get address memory ***/
     ChatLogic  *GetChatLogicHandle() { return _chatLogic.get(); }
 
     // events
