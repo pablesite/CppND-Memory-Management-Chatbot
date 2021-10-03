@@ -42,7 +42,7 @@ void GraphNode::MoveChatbotHere(ChatBot chatbot) {
  * the pointer. Also memory allocated in chatBot is managed with rule of Five in
  * ChatBot class ***/
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode) {
-  newNode->MoveChatbotHere(_chatBot);
+  newNode->MoveChatbotHere(std::move(_chatBot));
   //_chatBot = nullptr; // invalidate pointer at source
 }
 
